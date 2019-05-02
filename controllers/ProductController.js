@@ -24,6 +24,22 @@ exports.getProduct = async (req, res) => {
   res.send(product);
 }
 
+exports.paginatedProducts = async (req, res) => {
+  const pageString = req.params.page || 1;
+  const page = parseInt(pageString);
+  const per_page = 4;
+  const skip = (page * per_page) - per_page;
+  const productPromise = Product.find().populate('transactions').skip(skip).limit(per_page).sort({ created: 'desc' });
+  const countPromise = Product.count();
+
+  const [products, total] = await Promise.all([productPromise, countPromise]);
+
+  const total_pages = Math.ceil(total / per_page);
+  res.json({ page, per_page, total, total_pages, products });
+
+
+}
+
 exports.productWithTransaction = async (req, res) => {
   // get product by id
   const { id } = req.params;

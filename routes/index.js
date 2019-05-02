@@ -19,6 +19,9 @@ router.get('/product/:id', catchErrors(ProductController.getProduct));
 // post products with transactions
 router.post('/products/:id', catchErrors(ProductController.productWithTransaction));
 
+// paginated products
+router.get('/products/page/:page', catchErrors(ProductController.paginatedProducts));
+
 
 
 module.exports = router;
